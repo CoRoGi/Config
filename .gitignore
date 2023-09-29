@@ -1,0 +1,12 @@
+iterm2/
+butterfish/
+qBittorrent/
+nvim/!colors/astronvim.lua
+nvim/colors/*
+nvim/docs
+nvim/ginit.vim
+nvim/plugin
+nvim/ftplugin
+nvim/spell
+nvim/.luarc.json
+
