@@ -41,9 +41,13 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Personal/Org/")
-(setq org-roam-directory (file-truename "~/Personal/Org/"))
-(org-roam-db-autosync-mode)
-(setq find-file-visit-truename t)
+;; (setq org-roam-directory (file-truename "~/Personal/Org/"))
+;; (setq find-file-visit-truename t)
+(use-package! org-roam
+  :custom
+  (org-roam-directory "~/Personal/Org/")
+  :config
+  (org-roam-db-autosync-enable))
 (use-package! websocket
     :after org-roam-ui)
 
@@ -59,15 +63,50 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start nil))
 
-(use-package! org-super-agenda
-  :after org-agenda
+(font-lock-add-keywords
+ 'org-mode '(("\\<\\(NOTE\\):" 1 font-lock-warning-face prepend)))
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :config
+;;   (setq org-super-agenda-groups '((:auto-dir-name nil)))
+;;   (org-super-agenda-mode))
+
+(after! org
+  (setq org-todo-keywords '((sequence "IDEA(i)" "TODO(t)" "ACTIVE(a)" "WAITING(w)" "BACKLOG(b)" "|" "DONE(d)" "CANCELLED(c)"))))
+
+(setq deft-directory "~/Personal/Org"
+      deft-extensions '("org")
+      deft-recursive t
+      deft-use-filename-as-title t)
+
+;; (use-package! org-fragtog
+;; :after org
+;; ;;:hook (org-mode . org-fragtog) ; this auto-enables it when you enter an org-buffer, remove if you do not want this
+;; :config
+;; (add-hook 'org-mode-hook 'org-fragtog-mode)
+;; ;; whatever you want
+;; )
+(setq warning-suppress-types (append warning-suppress-types '((org-element-cache))))
+(global-visual-line-mode t)
+
+(use-package org-fragtog
+  :hook (org-mode . org-fragtog-mode)
   :config
-  (setq org-super-agenda-groups '((:auto-dir-name t)))
-  (org-super-agenda-mode))
+  (setq org-fragtog-preview-delay 0.25))
+
+(use-package olivetti-mode
+  :hook (org-mode . olivetti-mode)
+  )
+
+(setq olivetti-body-width 90)
 
 (setq org-gcal-client-id "709693057275-g26av97u32cklm0936irob96rcv7g42k.apps.googleusercontent.com"
       org-gcal-client-secret "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"
-      org-gcal-fetch-file-alist '(("cory.gipson@gmail.com" .  "~/Personal/Org/Calendar/gcal.org")))
+      org-gcal-fetch-file-alist '(("cory.gipson@gmail.com" .  "~/Personal/Org/Calendar/gcal.org")
+                                  ("b5fb924cfcbdae838c59e655a07593033e273ec9febbbbc04f4ff89c86605ac0@group.calendar.google.com" . "~/Personal/Org/Calendar/gcal.org")
+                                  ("981f4effe613b14a5433f295932f465b6eb33e841dd6a6c13fe13aac4b0393b0@group.calendar.google.com" .  "~/Personal/Org/Calendar/gcal.org")
+                                  ("d74de426d75ad73aaade4d6c8ba8370714d6a89e2b7679b5fe908c1acbb8ca92@group.calendar.google.com" . "~/Personal/Org/Calendar/gcal.org")
+                                  ("51d2d5bf8bb8649f260daa44c7d6a1ecd97c6f8034e7294a75f73ee530a0feae@group.calendar.google.com" .  "~/Personal/Org/Calendar/gcal.org")))
 (require 'org-gcal)
 (require 'epa-file)
 (setq epg-pinentry-mode 'loopback)
@@ -86,11 +125,21 @@
   "* %U %?\n%i\n" :prepend t)))
 
 (defcustom org-roam-dailies-capture-templates
-  `(("d" "default" entry
-     "* %^U %?\n%i\n" :prepend nil
+  `(("d" "default" plain
+     "- %^U %?\n%i\n" :prepend nil
      :target (file+head+olp "%<%Y-%m-%d>.org"
-                        "#+title: %<%Y-%m-%d>\n* Agenda\n"
-                        ("Logs"))))
+                        "#+title: %<%Y-%m-%d>\n* Journal\n* TODOs\n"
+                        ("Logs")))
+    ("j" "journal" plain
+     "%?" :prepend nil
+     :target (file+head+olp "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>"
+                            ("Journal")))
+    ("t" "todo" plain
+     "** TODO %?" :prepend nil
+     :target (file+head+olp "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>"
+                            ("TODOs"))))
   "Capture templates for daily-notes in Org-roam.
 Note that for daily files to show up in the calendar, they have to be of format
 \"org-time-string.org\".
@@ -163,7 +212,8 @@ See `org-roam-capture-templates' for the template documentation."
                :desc "Open dired" "d" #'dired
                :desc "Open ranger" "r" #'ranger)
       (:prefix ("e" . "excalidraw")
-               :desc "Create drawing" "x" #'org-excalidraw-create-drawing)
+               :desc "Create drawing" "x" #'org-excalidraw-create-drawing
+               :desc "Toggle inline image at point" "t" #'+org-toggle-inline-image-at-point)
       (:prefix ("r" . "roam")
                :desc "Capture today" "t" #'org-roam-dailies-capture-today
                :desc "Go to today" "g t" #'org-roam-dailies-goto-today
@@ -177,6 +227,16 @@ See `org-roam-capture-templates' for the template documentation."
   :config
   (setq org-excalidraw-directory "~/Personal/Org/excalidraw")
 )
+
+(defun +org-toggle-inline-image-at-point ()
+  "Toggle inline image at point."
+  (interactive)
+  (if-let* ((bounds (and (not org-inline-image-overlays)
+                         (org-in-regexp org-link-any-re nil t)))
+            (beg (car bounds))
+            (end (cdr bounds)))
+      (org-display-inline-images nil nil beg end)
+    (org-toggle-inline-images)))
 ;;       :after dired
 ;;       (:map dired-mode-map
 ;;             :desc "Peep-dired" "d p" #'peep-dired))
