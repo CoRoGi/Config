@@ -34,6 +34,8 @@
 (package! websocket)
 (package! org-gcal)
 (package! org-excalidraw   :recipe (:host github :repo "wdavew/org-excalidraw"))
+(package! calfw-blocks :recipe (:host github :repo "ml729/calfw-blocks"))
+(package! org-transclusion)
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
 ;; from Doom or MELPA/ELPA/Emacsmirror:

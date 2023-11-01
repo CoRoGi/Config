@@ -102,6 +102,7 @@
 
 (setq org-gcal-client-id "709693057275-g26av97u32cklm0936irob96rcv7g42k.apps.googleusercontent.com"
       org-gcal-client-secret "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"
+      ;; My calendars - they are, in order: Social, Chores/Errands, Health/Fitness, Reminders, Studies
       org-gcal-fetch-file-alist '(("cory.gipson@gmail.com" .  "~/Personal/Org/Calendar/gcal.org")
                                   ("b5fb924cfcbdae838c59e655a07593033e273ec9febbbbc04f4ff89c86605ac0@group.calendar.google.com" . "~/Personal/Org/Calendar/gcal.org")
                                   ("981f4effe613b14a5433f295932f465b6eb33e841dd6a6c13fe13aac4b0393b0@group.calendar.google.com" .  "~/Personal/Org/Calendar/gcal.org")
@@ -227,6 +228,18 @@ See `org-roam-capture-templates' for the template documentation."
   :config
   (setq org-excalidraw-directory "~/Personal/Org/excalidraw")
 )
+
+(use-package! calfw-blocks
+  :after calfw)
+
+(use-package! org-transclusion
+  :after org
+  :init
+  (map!
+   :map global-map "<f12>" #'org-transclusion-add
+   :leader
+   :prefix "n"
+   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
 
 (defun +org-toggle-inline-image-at-point ()
   "Toggle inline image at point."
