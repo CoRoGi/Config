@@ -107,7 +107,8 @@
                                   ("b5fb924cfcbdae838c59e655a07593033e273ec9febbbbc04f4ff89c86605ac0@group.calendar.google.com" . "~/Personal/Org/Calendar/gcal.org")
                                   ("981f4effe613b14a5433f295932f465b6eb33e841dd6a6c13fe13aac4b0393b0@group.calendar.google.com" .  "~/Personal/Org/Calendar/gcal.org")
                                   ("d74de426d75ad73aaade4d6c8ba8370714d6a89e2b7679b5fe908c1acbb8ca92@group.calendar.google.com" . "~/Personal/Org/Calendar/gcal.org")
-                                  ("51d2d5bf8bb8649f260daa44c7d6a1ecd97c6f8034e7294a75f73ee530a0feae@group.calendar.google.com" .  "~/Personal/Org/Calendar/gcal.org")))
+                                  ("51d2d5bf8bb8649f260daa44c7d6a1ecd97c6f8034e7294a75f73ee530a0feae@group.calendar.google.com" .  "~/Personal/Org/Calendar/gcal.org")
+                                  ("0d907f287892af61058510f69c74eae7e7cfce24da94516ea6c36318e852e84e@group.calendar.google.com" . "~/Personal/Org/Calendar/gcal.org")))
 (require 'org-gcal)
 (require 'epa-file)
 (setq epg-pinentry-mode 'loopback)
@@ -241,15 +242,16 @@ See `org-roam-capture-templates' for the template documentation."
    :prefix "n"
    :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
 
-(defun +org-toggle-inline-image-at-point ()
-  "Toggle inline image at point."
-  (interactive)
-  (if-let* ((bounds (and (not org-inline-image-overlays)
-                         (org-in-regexp org-link-any-re nil t)))
-            (beg (car bounds))
-            (end (cdr bounds)))
-      (org-display-inline-images nil nil beg end)
-    (org-toggle-inline-images)))
+;; (defun +org-toggle-inline-image-at-point ()
+;;   "Toggle inline image at point."
+;;   (interactive)
+;;   (if-let* ((bounds (and (not org-inline-image-overlays)
+;;                          (org-in-regexp org-link-any-re nil t)))
+;;             (beg (car bounds))
+;;             (end (cdr bounds)))
+;;       (org-display-inline-images nil nil beg end)
+;;     (org-toggle-inline-images)))
+;;
 ;;       :after dired
 ;;       (:map dired-mode-map
 ;;             :desc "Peep-dired" "d p" #'peep-dired))
