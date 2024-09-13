@@ -30,7 +30,6 @@ local spaceConfigs = {
   ["8"] = { icon = "", name = "" },
   ["9"] = { icon = "", name = "" },
   ["10"] = { icon = "", name = "" },
-  -- ["t"] = { icon = "", name = "Meeting" },
 }
 
 local tempSpaces = {
@@ -60,8 +59,6 @@ local function selectCurrentWorkspace(focusedWorkspaceName)
       end)
     end
   end
-
-  -- sbar.trigger(constants.events.UPDATE_WINDOWS)
 end
 
 local function findAndSelectCurrentWorkspace()
@@ -101,12 +98,6 @@ local function addWorkspaceItem(workspaceName)
     end)
   end)
 
-  -- spaces[spaceName]:subscribe("mouse.exited", function(env)
-  --   sbar.animate("tanh", 30, function()
-  --     spaces[spaceName]:set({ label = { width = 0 } })
-  --   end)
-  -- end)
-
   sbar.add("item", spaceName .. ".padding", {
     width = settings.dimens.padding.label,
   })
@@ -123,7 +114,6 @@ local function getWorkspaceWindows(workspaceName)
             .. settings.icons.apps[window]
             .. " "
       end
-      -- addWorkspaceItem(workspaceName)
       local keys = {}
       for key in pairs(spaceConfigs) do
         table.insert(keys, key)
@@ -147,33 +137,18 @@ local function updateWorkspaceWindows(workspaceName)
       for window in windows:gmatch("[^\r\n]+") do
         tempSpaces[workspaceName].icon = tempSpaces[workspaceName].icon .. settings.icons.apps[window] .. " "
       end
-      -- addWorkspaceItem(workspaceName)
       local keys = {}
       for key in pairs(tempSpaces) do
         table.insert(keys, key)
       end
-      -- table.sort(keys, function(a, b)
-      --   return tonumber(a) < tonumber(b)
-      -- end)
       for _, key in ipairs(keys) do
         local spaceName = constants.items.SPACES .. "." .. key
         sbar.animate("linear", 5, function()
           spaces[spaceName]:set({ string = "", label = { width = 0 } })
-          -- sbar.animate("linear", 10, function()
-          --   spaces[spaceName]:set({ label = { width = "0" } })
           sbar.animate("tanh", 60, function()
             spaces[spaceName]:set({ label = { string = tempSpaces[key].icon, width = "dynamic" } })
-            -- end)
           end)
         end)
-        -- sbar.animate("tanh", 90, function()
-        --   spaces[spaceName]:set({ label = { width = "dynamic" } })
-        -- end)
-        -- else
-        --   local spaceName = constants.items.SPACES .. "." .. key
-        --   sbar.animate("tanh", 120, function()
-        --     spaces[spaceName]:set({ label = { string = tempSpaces[key].icon, width = "dynamic" } })
-        --   end)
       end
     end
   )
@@ -183,7 +158,6 @@ local function createWorkspaces()
   sbar.exec(constants.aerospace.LIST_ALL_WORKSPACES, function(workspacesOutput)
     for workspaceName in workspacesOutput:gmatch("[^\r\n]+") do
       getWorkspaceWindows(workspaceName)
-      -- addWorkspaceItem(workspaceName)
     end
 
     findAndSelectCurrentWorkspace()
@@ -196,23 +170,7 @@ swapWatcher:subscribe(constants.events.SWAP_MENU_AND_SPACES, function(env)
 end)
 
 currentWorkspaceWatcher:subscribe(constants.events.AEROSPACE_WORKSPACE_CHANGED, function(env)
-  -- sbar.remove("/" .. constants.items.SPACES .. "\\.*/")
-  -- spaceConfigs = {
-  --   ["1"] = { icon = "", name = "" },
-  --   ["2"] = { icon = "", name = "" },
-  --   ["3"] = { icon = "", name = "" },
-  --   ["4"] = { icon = "", name = "" },
-  --   ["5"] = { icon = "", name = "" },
-  --   ["6"] = { icon = "", name = "" },
-  --   ["7"] = { icon = "", name = "" },
-  --   ["8"] = { icon = "", name = "" },
-  --   ["9"] = { icon = "", name = "" },
-  --   ["10"] = { icon = "", name = "" },
-  -- }
-  -- createWorkspaces()
   selectCurrentWorkspace(env.FOCUSED_WORKSPACE)
-  -- updateWorkspaceWindows()
-  -- sbar.trigger(constants.events.UPDATE_WINDOWS)
 end)
 
 windowWatcher:subscribe(constants.events.UPDATE_WINDOWS, function()

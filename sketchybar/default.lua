@@ -27,8 +27,8 @@ sbar.default({
     corner_radius = settings.dimens.graphics.background.corner_radius,
     border_width = 0,
     image = {
-      corner_radius = settings.dimens.graphics.background.corner_radius
-    }
+      corner_radius = settings.dimens.graphics.background.corner_radius,
+    },
   },
   popup = {
     y_offset = settings.dimens.padding.popup,

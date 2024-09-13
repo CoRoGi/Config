@@ -13,7 +13,7 @@ local frontAppWatcher = sbar.add("item", {
 local function selectFocusedWindow(frontAppName)
   for appName, app in pairs(frontApps) do
     local isSelected = appName == frontAppName
-    local color = isSelected and settings.colors.cyan or settings.colors.white
+    local color = isSelected and settings.colors.blue or settings.colors.white
     app:set({
       label = { color = color },
       icon = { color = color },
@@ -51,26 +51,8 @@ local function updateWindows(windows)
       },
       click_script = "aerospace focus --window-id " .. windowId,
     })
-    -- sbar.animate("tanh", 120, function()
-    --   sbar.set(constants.items.FRONT_APPS .. "." .. windowName, {
-    --     label = {
-    --       width = 0,
-    --     },
-    --     icon = {
-    --       width = 0,
-    --     },
-    --   })
-    -- end)
-    --
-    -- sbar.animate("tanh", 90, function()
-    --   sbar.set(constants.items.FRONT_APPS .. "." .. windowName, {
-    --     icon = {
-    --       width = 0,
-    --     },
-    --   })
-    -- end)
 
-    sbar.animate("linear", 60, function()
+    sbar.animate("linear", 75, function()
       sbar.set(constants.items.FRONT_APPS .. "." .. windowName, {
         label = {
           string = windowName,
@@ -83,15 +65,6 @@ local function updateWindows(windows)
       })
     end)
 
-    -- sbar.animate("tanh", 60, function()
-    --   sbar.set(constants.items.FRONT_APPS .. "." .. windowName, {
-    --     icon = {
-    --       string = icon,
-    --       width = "dynamic",
-    --     },
-    --   })
-    -- end)
-    --
     frontApps[windowName]:subscribe(constants.events.FRONT_APP_SWITCHED, function(env)
       selectFocusedWindow(env.INFO)
     end)
