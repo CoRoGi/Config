@@ -2,21 +2,31 @@ local constants = require("constants")
 local settings = require("config.settings")
 
 local calendar = sbar.add("item", constants.items.CALENDAR, {
-  position = "right",
-  update_freq = 1,
-  color = settings.colors.dirty_white,
-  icon = { padding_left = 0, padding_right = 0 },
-  background = {
-    color = settings.colors.with_alpha(settings.colors.purple, 0.5),
-  },
+	position = "right",
+	update_freq = 1,
+	color = settings.colors.blue,
+	padding_right = 1,
+	icon = {
+		padding_left = 0,
+		padding_right = 0,
+	},
+	background = {
+		-- color = settings.colors.with_alpha(settings.colors.purple, 0.5),
+		corner_radius = 1,
+		padding_right = 5,
+	},
 })
 
 calendar:subscribe({ "forced", "routine", "system_woke" }, function(env)
-  calendar:set({
-    label = os.date("%a %d %b, %H:%M"),
-  })
+	calendar:set({
+		label = {
+			string = os.date("%a %d %b, %H:%M"),
+			color = settings.colors.with_alpha(settings.colors.green, 0.7),
+			padding_right = 5,
+		},
+	})
 end)
 
 calendar:subscribe("mouse.clicked", function(env)
-  sbar.exec("open -a 'Calendar'")
+	sbar.exec("open -a 'Calendar'")
 end)
