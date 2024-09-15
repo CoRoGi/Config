@@ -53,14 +53,17 @@ local function selectCurrentWorkspace(focusedWorkspaceName)
 			sbar.animate("tanh", 150, function()
 				item:set({
 					icon = {
-						color = isSelected and settings.colors.with_alpha(settings.colors.green, 0.8)
-							or settings.colors.with_alpha(settings.colors.purple, 0.9),
+						color = isSelected and settings.colors.with_alpha(settings.colors.magenta, 0.8)
+							or settings.colors.with_alpha(settings.colors.purple, 0.7),
 					},
 					label = {
-						color = isSelected and settings.colors.with_alpha(settings.colors.blue, 0.8)
-							or settings.colors.with_alpha(settings.colors.purple, 0.9),
+						color = isSelected and settings.colors.with_alpha(settings.colors.cyan, 0.8)
+							or settings.colors.with_alpha(settings.colors.purple, 0.7),
 					},
-					background = { color = isSelected and settings.colors.transparent or settings.colors.transparent },
+					background = {
+						color = isSelected and settings.colors.with_alpha(settings.colors.red, 0.0)
+							or settings.colors.with_alpha(settings.colors.other_purple, 0.0),
+					},
 				})
 			end)
 		end

@@ -3,7 +3,7 @@ local settings = require("config.settings")
 local apple = sbar.add("item", "apple", {
 	icon = {
 		string = settings.icons.text.apple,
-		color = settings.colors.with_alpha(settings.colors.green, 0.5),
+		color = settings.colors.with_alpha(settings.colors.orange, 0.9),
 		y_offset = 1,
 	},
 	label = { drawing = false },

@@ -18,7 +18,7 @@ local function addToggle()
 	local menuToggle = sbar.add("item", constants.items.MENU_TOGGLE, {
 		icon = {
 			string = settings.icons.text.switch.on,
-			color = settings.colors.with_alpha(settings.colors.green, 0.5),
+			color = settings.colors.with_alpha(settings.colors.orange, 0.9),
 			y_offset = 1,
 		},
 		label = {
@@ -44,7 +44,7 @@ local function addToggle()
 					color = { alpha = 1.0 },
 					border_color = { alpha = 0.5 },
 				},
-				icon = { color = settings.colors.green },
+				icon = { color = settings.colors.orange },
 				label = { width = "dynamic" },
 			})
 		end)
@@ -57,7 +57,7 @@ local function addToggle()
 					color = { alpha = 0.5 },
 					border_color = { alpha = 0.0 },
 				},
-				icon = { color = settings.colors.with_alpha(settings.colors.green, 0.5) },
+				icon = { color = settings.colors.with_alpha(settings.colors.orange, 0.8) },
 				label = { width = 0 },
 			})
 		end)

@@ -21,7 +21,7 @@ calendar:subscribe({ "forced", "routine", "system_woke" }, function(env)
 	calendar:set({
 		label = {
 			string = os.date("%a %d %b, %H:%M"),
-			color = settings.colors.with_alpha(settings.colors.green, 0.7),
+			color = settings.colors.with_alpha(settings.colors.orange, 0.9),
 			padding_right = 5,
 		},
 	})

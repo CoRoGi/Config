@@ -61,7 +61,7 @@ volumeValue:subscribe("volume_change", function(env)
 
 		local hasVolume = volume ~= 0
 		volumeValue:set({
-			icon = { string = icon, color = settings.colors.with_alpha(settings.colors.blue, 0.6) },
+			icon = { string = icon, color = settings.colors.with_alpha(settings.colors.cyan, 0.8) },
 			label = {
 				string = hasVolume and lead .. volume .. "%" or "",
 				padding_right = hasVolume and 8 or 0,
@@ -107,13 +107,13 @@ local function toggleVolumeDetails(env)
 						align = "center",
 						label = { string = device, color = color },
 						click_script = 'SwitchAudioSource -s "'
-							.. device
-							.. '" && sketchybar --set /'
-							.. constants.items.VOLUME
-							.. ".device\\.*/ label.color="
-							.. settings.colors.grey
-							.. " --set $NAME label.color="
-							.. settings.colors.white,
+								.. device
+								.. '" && sketchybar --set /'
+								.. constants.items.VOLUME
+								.. ".device\\.*/ label.color="
+								.. settings.colors.grey
+								.. " --set $NAME label.color="
+								.. settings.colors.white,
 					})
 					counter = counter + 1
 				end

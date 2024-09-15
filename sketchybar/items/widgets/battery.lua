@@ -32,7 +32,7 @@ battery:subscribe({ "routine", "power_source_change", "system_woke" }, function(
 			label = charge .. "%"
 		end
 
-		local color = settings.colors.with_alpha(settings.colors.blue, 0.6)
+		local color = settings.colors.with_alpha(settings.colors.cyan, 0.8)
 		local charging, _, _ = batteryInfo:find("AC Power")
 
 		isCharging = charging
@@ -86,7 +86,7 @@ battery:subscribe("mouse.clicked", function(env)
 		sbar.exec("pmset -g batt", function(batteryInfo)
 			local found, _, remaining = batteryInfo:find("(%d+:%d+) remaining")
 			local label = found and ("Time remaining: " .. remaining .. "h")
-				or (isCharging and "Charging" or "No estimate")
+					or (isCharging and "Charging" or "No estimate")
 			batteryPopup:set({ label = label })
 		end)
 	end
