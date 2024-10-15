@@ -50,24 +50,42 @@ local function selectCurrentWorkspace(focusedWorkspaceName)
 		if item ~= nil then
 			local isSelected = sid == constants.items.SPACES .. "." .. focusedWorkspaceName
 
-			sbar.animate("tanh", 150, function()
+			sbar.animate("linear", 150, function()
 				item:set({
 					icon = {
-						color = isSelected and settings.colors.with_alpha(settings.colors.magenta, 0.8)
-							or settings.colors.with_alpha(settings.colors.purple, 0.7),
+						-- string = isSelected and focusedWorkspaceName,
+						color = isSelected and settings.colors.with_alpha(settings.colors.cyan, 0.7)
+								or settings.colors.with_alpha(settings.colors.cyan, 0.4),
 					},
 					label = {
-						color = isSelected and settings.colors.with_alpha(settings.colors.cyan, 0.8)
-							or settings.colors.with_alpha(settings.colors.purple, 0.7),
+						color = isSelected and settings.colors.with_alpha(settings.colors.orange, 0.6)
+								or settings.colors.with_alpha(settings.colors.dark_blue, 0.7),
 					},
 					background = {
-						color = isSelected and settings.colors.with_alpha(settings.colors.red, 0.0)
-							or settings.colors.with_alpha(settings.colors.other_purple, 0.0),
+						color = isSelected and settings.colors.with_alpha(settings.colors.dark_blue, 0.0)
+								or settings.colors.with_alpha(settings.colors.other_purple, 0.0),
+						border_color = isSelected and settings.colors.with_alpha(settings.colors.orange, 0.5)
+								or settings.colors.with_alpha(settings.colors.other_purple, 0.0),
+						border_width = isSelected and 2 or 0,
 					},
 				})
 			end)
 		end
 	end
+
+	local spaceBracket = sbar.add("bracket", "spaceBracket", { "/" .. constants.items.SPACES .. "\\..*/", "apple" }, {
+		updates = true,
+		drawing = true,
+		background = {
+			color = settings.colors.black,
+			drawing = true,
+			height = 35,
+			border_color = settings.colors.with_alpha(settings.colors.dark_blue, 0.7),
+			border_width = 2,
+			corner_radius = 36,
+			padding_left = 0,
+		},
+	})
 end
 
 local function findAndSelectCurrentWorkspace()
@@ -95,9 +113,12 @@ local function addWorkspaceItem(workspaceName)
 			padding_right = 8,
 			color = settings.colors.blue,
 		},
-		background = {
-			color = settings.colors.bg1,
-		},
+		-- background = {
+		-- 	color = settings.colors.transparent,
+		-- 	corner_radius = 1,
+		-- 	padding_left = 0,
+		-- 	padding_right = 0,
+		-- },
 		click_script = "aerospace workspace " .. workspaceName,
 	})
 
@@ -108,20 +129,20 @@ local function addWorkspaceItem(workspaceName)
 	end)
 
 	sbar.add("item", spaceName .. ".padding", {
-		width = settings.dimens.padding.label,
+		width = 0,
 	})
 end
 
 local function getWorkspaceWindows(workspaceName)
 	sbar.exec(
 		"aerospace list-windows --workspace "
-			.. workspaceName
-			.. " | awk -F '|' '{gsub(/^ +| +$/, \"\", $2); print $2}' ",
+		.. workspaceName
+		.. " | awk -F '|' '{gsub(/^ +| +$/, \"\", $2); print $2}' ",
 		function(windows)
 			for window in windows:gmatch("[^\r\n]+") do
 				spaceConfigs[workspaceName].icon = spaceConfigs[workspaceName].icon
-					.. settings.icons.apps[window]
-					.. " "
+						.. settings.icons.apps[window]
+						.. " "
 			end
 			local keys = {}
 			for key in pairs(spaceConfigs) do
@@ -137,11 +158,11 @@ local function getWorkspaceWindows(workspaceName)
 	)
 end
 
-local function updateWorkspaceWindows(workspaceName)
+local function updateWorkspaceWindows(workspaceName, focusedWorkspace)
 	sbar.exec(
 		"aerospace list-windows --workspace "
-			.. workspaceName
-			.. " | awk -F '|' '{gsub(/^ +| +$/, \"\", $2); print $2}' ",
+		.. workspaceName
+		.. " | awk -F '|' '{gsub(/^ +| +$/, \"\", $2); print $2}' ",
 		function(windows)
 			for window in windows:gmatch("[^\r\n]+") do
 				tempSpaces[workspaceName].icon = tempSpaces[workspaceName].icon .. settings.icons.apps[window] .. " "
@@ -150,14 +171,39 @@ local function updateWorkspaceWindows(workspaceName)
 			for key in pairs(tempSpaces) do
 				table.insert(keys, key)
 			end
-			for _, key in ipairs(keys) do
+			for sid, key in ipairs(keys) do
 				local spaceName = constants.items.SPACES .. "." .. key
-				sbar.animate("linear", 5, function()
-					spaces[spaceName]:set({ string = "", label = { width = 0 } })
-					sbar.animate("tanh", 60, function()
-						spaces[spaceName]:set({ label = { string = tempSpaces[key].icon, width = "dynamic" } })
-					end)
+				sbar.animate("circ", 30, function()
+					if tempSpaces[key].icon == "" then
+						spaces[spaceName]:set({
+							width = 0,
+							padding_right = 0,
+							padding_left = 0,
+							icon = { string = "", padding_right = 0 },
+							label = { string = "", padding_right = 0 },
+							background = { padding_right = 0 },
+						})
+					else
+						spaces[spaceName]:set({
+							width = "dynamic",
+							-- padding_right = 2,
+							icon = { string = key, padding_right = 8 },
+							label = { string = tempSpaces[key].icon, width = "dynamic", padding_right = 8 },
+							background = { padding_right = 0 },
+							y_offset = 30,
+						})
+						spaces[spaceName]:set({
+							y_offset = 0,
+						})
+					end
 				end)
+				-- if tempSpaces[key].icon == "" then
+				-- 	spaces[spaceName]:set({
+				-- 		width = 0,
+				-- 		icon = { string = "" },
+				-- 		label = { string = "" },
+				-- 	})
+				-- end
 			end
 		end
 	)
@@ -170,6 +216,19 @@ local function createWorkspaces()
 		end
 
 		findAndSelectCurrentWorkspace()
+
+		-- local spaceBracket = sbar.add("bracket", { "/" .. constants.items.SPACES .. "\\..*/" }, {
+		-- 	updates = true,
+		-- 	drawing = true,
+		-- 	background = {
+		-- 		color = settings.colors.bg1,
+		-- 		drawing = true,
+		-- 		height = 30,
+		-- 		width = 30,
+		-- 		border_color = settings.colors.blue,
+		-- 		border_radius = 8,
+		-- 	},
+		-- })
 	end)
 end
 
@@ -182,7 +241,7 @@ currentWorkspaceWatcher:subscribe(constants.events.AEROSPACE_WORKSPACE_CHANGED, 
 	selectCurrentWorkspace(env.FOCUSED_WORKSPACE)
 end)
 
-windowWatcher:subscribe(constants.events.UPDATE_WINDOWS, function()
+windowWatcher:subscribe(constants.events.UPDATE_WINDOWS, function(env)
 	sbar.exec(constants.aerospace.LIST_ALL_WORKSPACES, function(workspacesOutput)
 		tempSpaces = {
 			["1"] = { icon = "", name = "" },
@@ -197,9 +256,19 @@ windowWatcher:subscribe(constants.events.UPDATE_WINDOWS, function()
 			["10"] = { icon = "", name = "" },
 		}
 		for workspaceName in workspacesOutput:gmatch("[^\r\n]+") do
-			updateWorkspaceWindows(workspaceName)
+			updateWorkspaceWindows(workspaceName, env.FOCUSED_WORKSPACE)
 		end
 	end)
+	-- spaceBracket:set({
+	-- 	background = {
+	-- 		color = settings.colors.bg1,
+	-- 		drawing = true,
+	-- 		height = 30,
+	-- 		width = 30,
+	-- 		border_color = settings.colors.blue,
+	-- 		border_radius = 8,
+	-- 	},
+	-- })
 end)
 
 createWorkspaces()

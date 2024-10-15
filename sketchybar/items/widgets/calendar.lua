@@ -24,6 +24,10 @@ calendar:subscribe({ "forced", "routine", "system_woke" }, function(env)
 			color = settings.colors.with_alpha(settings.colors.orange, 0.9),
 			padding_right = 5,
 		},
+		-- background = {
+		-- 	color = settings.colors.with_alpha(settings.colors.other_purple, 0.8),
+		-- 	corner_radius = 1,
+		-- },
 	})
 end)
 

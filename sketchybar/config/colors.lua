@@ -2,8 +2,10 @@ local colors <const> = {
   black = 0xff181819,
   white = 0xfff8f8f2,
   red = 0xf1cc3e44,
-  green = 0xff8aff81,
+  green = 0xff9bdcb2,
+  dark_green = 0xff056225,
   blue = 0xff5199ba,
+  dark_blue = 0xff668cff,
   yellow = 0xffffff81,
   orange = 0xfff4c07b,
   magenta = 0xd3fc7ebd,
@@ -30,7 +32,9 @@ local colors <const> = {
   bg2 = 0xff302c45,
 
   with_alpha = function(color, alpha)
-    if alpha > 1.0 or alpha < 0.0 then return color end
+    if alpha > 1.0 or alpha < 0.0 then
+      return color
+    end
     return (color & 0x00ffffff) | (math.floor(alpha * 255.0) << 24)
   end,
 }

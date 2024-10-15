@@ -32,7 +32,7 @@ battery:subscribe({ "routine", "power_source_change", "system_woke" }, function(
 			label = charge .. "%"
 		end
 
-		local color = settings.colors.with_alpha(settings.colors.cyan, 0.8)
+		local color = settings.colors.with_alpha(settings.colors.dark_blue, 0.8)
 		local charging, _, _ = batteryInfo:find("AC Power")
 
 		isCharging = charging
@@ -72,6 +72,10 @@ battery:subscribe({ "routine", "power_source_change", "system_woke" }, function(
 				string = lead .. label,
 				padding_left = 0,
 				color = settings.colors.with_alpha(settings.colors.white, 0.7),
+			},
+			background = {
+				color = settings.colors.with_alpha(settings.colors.other_purple, 0.0),
+				corner_radius = 1,
 			},
 		})
 	end)

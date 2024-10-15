@@ -61,13 +61,30 @@ volumeValue:subscribe("volume_change", function(env)
 
 		local hasVolume = volume ~= 0
 		volumeValue:set({
-			icon = { string = icon, color = settings.colors.with_alpha(settings.colors.cyan, 0.8) },
+			icon = { string = icon, color = settings.colors.with_alpha(settings.colors.dark_blue, 0.8) },
 			label = {
 				string = hasVolume and lead .. volume .. "%" or "",
 				padding_right = hasVolume and 8 or 0,
 			},
+			-- background = {
+			-- 	color = settings.colors.with_alpha(settings.colors.other_purple, 0.8),
+			-- 	corner_radius = 1,
+			-- },
 		})
 	end)
+
+	local rightBracket = sbar.add("bracket", { constants.items.VOLUME .. ".value", constants.items.CALENDAR }, {
+		updates = true,
+		drawing = true,
+		background = {
+			color = settings.colors.bg1,
+			drawing = true,
+			height = 35,
+			border_color = settings.colors.with_alpha(settings.colors.dark_blue, 0.7),
+			border_width = 2,
+			corner_radius = 36,
+		},
+	})
 end)
 
 local function hideVolumeDetails()
